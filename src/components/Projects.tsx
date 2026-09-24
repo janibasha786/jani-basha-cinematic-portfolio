@@ -1,135 +1,108 @@
-const projects = [
-  {
-    number: "01",
-    title: "Charles Schwab – RDM Processing",
-    domain: "Banking / Financial Services",
-    technologies: [
-      "COBOL",
-      "JCL",
-      "DB2",
-      "Mainframe",
-    ],
-    description:
-      "Worked on RDM processing, including changes related to negative-rate processing and share destruction requirements.",
-    responsibilities: [
-      "Performed impact analysis for application changes.",
-      "Implemented and supported required application changes.",
-      "Performed validation and testing of changes.",
-      "Supported deployment activities.",
-      "Provided production incident support.",
-      "Monitored and supported 50+ production batch jobs.",
-    ],
-  },
-  {
-    number: "02",
-    title: "ANEX Account Number Conversion",
-    domain: "Banking / Financial Services",
-    technologies: [
-      "COBOL",
-      "JCL",
-      "DB2",
-      "Batch Processing",
-    ],
-    description:
-      "Worked on application changes associated with the conversion of ANEX account numbers from 8-digit to 9-digit format.",
-    responsibilities: [
-      "Analyzed application impact of account number changes.",
-      "Identified affected processing and data areas.",
-      "Supported development and validation activities.",
-      "Performed testing of application changes.",
-    ],
-  },
-  {
-    number: "03",
-    title: "Utica National Insurance – Claims Processing",
-    domain: "Insurance",
-    technologies: [
-      "COBOL",
-      "JCL",
-      "DB2",
-      "VSAM",
-      "IMS DB",
-      "CICS",
-    ],
-    description:
-      "Worked on enterprise insurance applications supporting claims processing and related business workflows.",
-    responsibilities: [
-      "Developed and enhanced COBOL applications.",
-      "Worked with batch and online processing.",
-      "Supported claims processing workflows.",
-      "Worked with Entry and Loss databases.",
-      "Implemented table-driven validations.",
-      "Worked with diaries and remarks processing.",
-    ],
-  },
-  {
-    number: "04",
-    title: "Production Support & Application Maintenance",
-    domain: "Banking & Insurance",
-    technologies: [
-      "COBOL",
-      "JCL",
-      "DB2",
-      "VSAM",
-      "IMS DB",
-      "CICS",
-    ],
-    description:
-      "Supported enterprise mainframe applications through incident investigation, defect resolution and application maintenance.",
-    responsibilities: [
-      "Investigated production incidents.",
-      "Performed abend debugging and root cause analysis.",
-      "Performed impact analysis for change requests.",
-      "Resolved application defects.",
-      "Supported batch job monitoring.",
-      "Performed unit testing and application validation.",
-    ],
-  },
-];
+import { useLayoutEffect, useRef } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
-export default function Projects() {
+gsap.registerPlugin(ScrollTrigger)
+
+function ProjectsNew() {
+  const projectsRef = useRef<HTMLElement>(null)
+
+  const projects = [
+    {
+      number: '01',
+      title: 'Charles Schwab',
+      role: 'Mainframe Developer',
+      domain: 'Banking & Financial Services',
+      description:
+        'Supported enterprise mainframe applications across banking and financial services, including Reverse Distribution Mechanism (RDM) and ANEX initiatives.',
+      responsibilities: [
+        'Performed impact analysis for application changes and enhancements.',
+        'Developed and maintained COBOL and JCL components.',
+        'Performed batch monitoring, debugging and production support.',
+        'Investigated defects and validated fixes through functional and regression testing.',
+        'Supported deployment activities and production issue resolution.'
+      ],
+      technologies:
+        'COBOL · JCL · DB2 · CICS · z/OS · Production Support'
+    },
+    {
+      number: '02',
+      title: 'Utica National Insurance',
+      role: 'Mainframe Developer',
+      domain: 'Insurance',
+      description:
+        'Developed, enhanced and supported enterprise mainframe applications involved in insurance claim processing.',
+      responsibilities: [
+        'Developed and maintained COBOL programs and JCL batch jobs.',
+        'Worked with DB2, IMS DB and VSAM for enterprise data processing.',
+        'Supported CICS online applications and transaction processing.',
+        'Performed impact analysis, debugging and defect resolution.',
+        'Handled production incidents and supported application maintenance.'
+      ],
+      technologies:
+        'COBOL · JCL · DB2 · IMS DB · VSAM · CICS · z/OS'
+    }
+  ]
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.set('.project-card', {
+        y: 60,
+        opacity: 0
+      })
+
+      gsap.to('.project-card', {
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: projectsRef.current,
+          start: 'top 75%',
+          once: true
+        }
+      })
+    }, projectsRef)
+
+    return () => ctx.revert()
+  }, [])
+
   return (
-    <section id="projects">
+    <section ref={projectsRef} id="projects" className="projects">
       <div className="section-header">
-        <p>SELECTED WORK</p>
-        <h2>Projects &amp; Experience</h2>
+        <p>PROJECTS</p>
+        <h2>Selected enterprise work</h2>
       </div>
 
       <div className="projects-list">
         {projects.map((project) => (
-          <article className="project-card" key={project.number}>
-            <div className="project-number">
-              {project.number}
-            </div>
+          <div className="project-card" key={project.number}>
+            <span>{project.number}</span>
 
-            <div className="project-content">
-              <p className="project-domain">
-                {project.domain}
-              </p>
-
+            <div className="project-info">
               <h3>{project.title}</h3>
+
+              <div className="project-meta">
+                <span>{project.role}</span>
+                <span>{project.domain}</span>
+              </div>
 
               <p>{project.description}</p>
 
-              <div className="project-technologies">
-                {project.technologies.map((technology) => (
-                  <span key={technology}>
-                    {technology}
-                  </span>
-                ))}
-              </div>
-
               <ul>
-                {project.responsibilities.map((responsibility) => (
-                  <li key={responsibility}>
-                    {responsibility}
-                  </li>
+                {project.responsibilities.map((item) => (
+                  <li key={item}>{item}</li>
                 ))}
               </ul>
+
+              <small>{project.technologies}</small>
             </div>
-          </article>
+          </div>
         ))}
       </div>
     </section>
-  );
+  )
 }
+
+export default ProjectsNew

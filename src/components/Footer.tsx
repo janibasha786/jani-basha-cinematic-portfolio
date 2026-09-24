@@ -1,55 +1,50 @@
-export default function Footer() {
+import { useLayoutEffect, useRef } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
+
+function Footer() {
+  const footerRef = useRef<HTMLElement>(null)
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.set('.footer-animate', {
+        y: 20,
+        opacity: 0
+      })
+
+      gsap.to('.footer-animate', {
+        y: 0,
+        opacity: 1,
+        duration: 0.7,
+        stagger: 0.15,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: footerRef.current,
+          start: 'top 90%',
+          once: true
+        }
+      })
+    }, footerRef)
+
+    return () => ctx.revert()
+  }, [])
+
   return (
-    <footer id="contact">
-      <div className="footer-content">
-        <div>
-          <p className="footer-label">
-            LET'S CONNECT
-          </p>
+    <footer
+      ref={footerRef}
+      className="footer"
+    >
+      <p className="footer-animate">
+        © 2026 JANI BASHA
+      </p>
 
-          <h2>
-            Open to Mainframe Development Opportunities.
-          </h2>
-
-          <p>
-            Interested in connecting regarding Mainframe Development,
-            enterprise application development or production support
-            opportunities.
-          </p>
-        </div>
-
-        <div className="footer-links">
-          <a href="mailto:YOUR_EMAIL@example.com">
-            Email
-          </a>
-
-          <a
-            href="YOUR_LINKEDIN_URL"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            LinkedIn
-          </a>
-
-          <a
-            href="YOUR_GITHUB_URL"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            GitHub
-          </a>
-        </div>
-      </div>
-
-      <div className="footer-bottom">
-        <span>
-          © 2026 Syed Mahaboob Jani Basha
-        </span>
-
-        <span>
-          Mainframe Developer
-        </span>
-      </div>
+      <p className="footer-animate">
+        MAINFRAME DEVELOPER
+      </p>
     </footer>
-  );
+  )
 }
+
+export default Footer

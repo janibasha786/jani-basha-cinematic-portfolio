@@ -1,83 +1,95 @@
-const skillCategories = [
-  {
-    title: "Mainframe Development",
-    skills: [
-      "COBOL",
-      "JCL",
-      "CICS",
-      "IMS DB",
-      "VSAM",
-    ],
-  },
-  {
-    title: "Database & SQL",
-    skills: [
-      "DB2",
-      "SQL",
-    ],
-  },
-  {
-    title: "Mainframe Tools",
-    skills: [
-      "TSO/ISPF",
-      "SDSF",
-      "File-AID",
-      "Expeditor",
-      "Easytrieve",
-    ],
-  },
-  {
-    title: "Utilities",
-    skills: [
-      "DFSORT",
-      "IDCAMS",
-      "IEBGENER",
-    ],
-  },
-  {
-    title: "Development & Support",
-    skills: [
-      "Impact Analysis",
-      "Production Support",
-      "Incident Management",
-      "Root Cause Analysis",
-      "Defect Resolution",
-      "Unit Testing",
-      "Batch Monitoring",
-      "Deployment Support",
-    ],
-  },
-  {
-    title: "Methodologies & Tools",
-    skills: [
-      "SDLC",
-      "Agile",
-      "Jira",
-    ],
-  },
-];
+import { useLayoutEffect, useRef } from 'react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
-export default function Skills() {
+gsap.registerPlugin(ScrollTrigger)
+
+function Skills() {
+  const skillsRef = useRef<HTMLElement>(null)
+
+  const skills = [
+    'COBOL',
+    'JCL',
+    'DB2',
+    'CICS',
+    'VSAM',
+    'IMS DB',
+    'SQL',
+    'SDSF',
+    'TSO',
+    'Production Support',
+    'Debugging',
+    'Impact Analysis'
+  ]
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      const skillItems = gsap.utils.toArray<HTMLElement>('.skill-item')
+
+      // Scroll reveal
+      gsap.set(skillItems, {
+        y: 30,
+        opacity: 0
+      })
+
+      gsap.to(skillItems, {
+        y: 0,
+        opacity: 1,
+        duration: 0.6,
+        stagger: 0.08,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: skillsRef.current,
+          start: 'top 75%',
+          once: true
+        }
+      })
+
+      // Hover animation
+      skillItems.forEach((item) => {
+        item.addEventListener('mouseenter', () => {
+          gsap.to(item, {
+            scale: 1.05,
+            y: -5,
+            duration: 0.25,
+            ease: 'power2.out'
+          })
+        })
+
+        item.addEventListener('mouseleave', () => {
+          gsap.to(item, {
+            scale: 1,
+            y: 0,
+            duration: 0.25,
+            ease: 'power2.out'
+          })
+        })
+      })
+    }, skillsRef)
+
+    return () => ctx.revert()
+  }, [])
+
   return (
-    <section id="skills">
+    <section
+      ref={skillsRef}
+      id="skills"
+      className="skills"
+    >
       <div className="section-header">
-        <p>TECHNICAL SKILLS</p>
-        <h2>Technologies &amp; tools</h2>
+        <p>SKILLS</p>
+        <h2>Tools and technologies</h2>
       </div>
 
-      <div className="skills-grid">
-        {skillCategories.map((category) => (
-          <div className="skill-category" key={category.title}>
-            <h3>{category.title}</h3>
-
-            <div className="skill-list">
-              {category.skills.map((skill) => (
-                <span key={skill}>{skill}</span>
-              ))}
-            </div>
+      <div className="skills-list">
+        {skills.map((skill) => (
+          <div className="skill-item" key={skill}>
+            {skill}
           </div>
         ))}
       </div>
     </section>
-  );
+  )
 }
+
+export default Skills

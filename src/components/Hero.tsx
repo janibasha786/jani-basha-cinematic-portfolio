@@ -1,100 +1,68 @@
-import { useEffect, useRef } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import photo from '../assets/photo.jpg'
+import resume from '../assets/Jani_Basha_Resume.pdf'
 
-gsap.registerPlugin(ScrollTrigger)
+function Hero() {
+  const heroRef = useRef<HTMLElement>(null)
 
-const MAX_ANGLE = 28
-
-function angleForProgress(p: number) {
-  if (p < 0.25) return -MAX_ANGLE * (p / 0.25)
-
-  if (p < 0.5)
-    return -MAX_ANGLE * (1 - (p - 0.25) / 0.25)
-
-  if (p < 0.75)
-    return MAX_ANGLE * ((p - 0.5) / 0.25)
-
-  return MAX_ANGLE * (1 - (p - 0.75) / 0.25)
-}
-
-export default function Hero() {
-  const pinRef = useRef<HTMLDivElement>(null)
-  const frameRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
+  useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      ScrollTrigger.create({
-        trigger: pinRef.current,
-        start: 'top top',
-        end: 'bottom bottom',
-        scrub: 0.3,
-
-        onUpdate: (self) => {
-          const angle = angleForProgress(self.progress)
-
-          gsap.set(frameRef.current, {
-            rotateY: angle,
-            z: -Math.abs(angle) * 1.1,
-          })
+      gsap.fromTo(
+        '.hero-animate',
+        {
+          y: 40,
+          opacity: 0
         },
-      })
-    }, pinRef)
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          stagger: 0.15,
+          ease: 'power3.out'
+        }
+      )
+    }, heroRef)
 
     return () => ctx.revert()
   }, [])
 
   return (
-    <section
-      ref={pinRef}
-      id="home"
-      className="relative h-[320vh]"
-    >
-      <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden">
+    <section ref={heroRef} className="hero">
+      <div className="hero-text">
+        <p className="hero-label hero-animate">
+          MAINFRAME DEVELOPER
+        </p>
 
-        {/* Your headline */}
-        <div className="absolute left-[8%] top-1/2 -translate-y-1/2">
-          <p className="text-sm tracking-[0.3em]">
-            MAINFRAME DEVELOPER
-          </p>
+        <h1 className="hero-animate">
+          Building and supporting
+          <br />
+          enterprise applications.
+        </h1>
 
-          <h1 className="mt-4 text-6xl font-bold">
-            Jani Basha
-          </h1>
+        <p className="hero-description hero-animate">
+          5+ years of experience working with COBOL, JCL, DB2,
+          CICS, VSAM and enterprise mainframe systems.
+        </p>
 
-          <p className="mt-6 max-w-xl">
-            Mainframe Developer with 5+ years of experience
-            in enterprise application development and
-            production support across Banking and Insurance.
-          </p>
-
-          <div className="mt-8 flex gap-4">
-            <a href="#projects">View Projects</a>
-            <a href="/resume.pdf" download>
-              Download Resume
-            </a>
-          </div>
-        </div>
-
-        {/* 3D Photo */}
-        <div style={{ perspective: '1000px' }}>
-          <div
-            ref={frameRef}
-            className="h-[410px] w-[300px] border border-[var(--line)]"
-            style={{
-              transformStyle: 'preserve-3d',
-            }}
+        <div className="hero-buttons hero-animate">
+          <a href="#projects">VIEW PROJECTS</a>
+          <a href="#contact">CONTACT ME</a>
+          <a href={resume}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="View Jani Basha resume"
           >
-            <img
-              src={photo}
-              className="h-full w-full object-cover"
-              alt="Jani Basha"
-            />
-          </div>
+            VIEW RESUME
+          </a>
         </div>
+      </div>
 
+      <div className="hero-photo hero-animate">
+        <img src={photo} alt="Jani Basha" />
       </div>
     </section>
   )
 }
+
+export default Hero
