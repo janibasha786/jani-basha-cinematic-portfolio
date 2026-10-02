@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
+import portraitImage from '../assets/JaniWireframe.png'
 
 function Background() {
   const mountRef = useRef(null)
@@ -45,10 +46,6 @@ function Background() {
     // =========================================================
 
     const getHeroSettings = () => {
-      // =======================================================
-      // SMALL MOBILE
-      // =======================================================
-
       if (window.innerWidth <= 480) {
         return {
           x: 0,
@@ -57,11 +54,6 @@ function Background() {
           scale: 0.52,
         }
       }
-
-      // =======================================================
-      // TABLET
-      // Right-middle position
-      // =======================================================
 
       if (window.innerWidth <= 768) {
         return {
@@ -72,10 +64,6 @@ function Background() {
         }
       }
 
-      // =======================================================
-      // DESKTOP
-      // =======================================================
-
       return {
         x: 2.65,
         y: -0.15,
@@ -84,15 +72,13 @@ function Background() {
       }
     }
 
-    const heroSettings =
-      getHeroSettings()
+    const heroSettings = getHeroSettings()
 
     // =========================================================
     // MAIN GROUP
     // =========================================================
 
-    const mainGroup =
-      new THREE.Group()
+    const mainGroup = new THREE.Group()
 
     mainGroup.position.set(
       heroSettings.x,
@@ -110,6 +96,7 @@ function Background() {
 
     // =========================================================
     // PORTRAIT TEXTURE
+    // Vite-imported asset for production deployment
     // =========================================================
 
     const textureLoader =
@@ -117,7 +104,7 @@ function Background() {
 
     const portraitTexture =
       textureLoader.load(
-        '/src/assets/JaniWireframe.png'
+        portraitImage
       )
 
     portraitTexture.colorSpace =
